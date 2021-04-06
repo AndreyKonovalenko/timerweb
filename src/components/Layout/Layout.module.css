@@ -1,0 +1,31 @@
+.Main {
+  width: 100%;
+  margin: auto;
+  height: 250px;
+  overflow: scroll;
+  text-align: center;
+  font-weight: bold;
+  font-size: 45;
+  background: red;
+}
+
+@media (min-width: 500px) and (min-height: 400px) {
+  .Main {
+    width: 350px;
+    height: 300px;
+  }
+}
+
+@media (min-width: 500px) and (min-height: 401px) {
+  .Main {
+    width: 450px;
+    height: 400px;
+  }
+}
+
+@media (min-width: 1000px) and (min-height: 700px) {
+  .Main {
+    width: 700px;
+    height: 600px;
+  }
+}
