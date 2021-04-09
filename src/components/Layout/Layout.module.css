@@ -1,15 +1,18 @@
 .Main {
-  width: 100%;
+  width: 325px;
   margin: auto;
-  height: 250px;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  height: 667px;
   overflow: scroll;
   text-align: center;
   font-weight: bold;
   font-size: 45;
-  background: red;
+  border: 2px solid black;
+  border-radius: 2rem;
 }
 
-@media (min-width: 500px) and (min-height: 400px) {
+/* @media (min-width: 500px) and (min-height: 400px) {
   .Main {
     width: 350px;
     height: 300px;
@@ -23,9 +26,9 @@
   }
 }
 
-@media (min-width: 1000px) and (min-height: 700px) {
+@media (min-width: 1334px) and (min-height: 750px) {
   .Main {
-    width: 700px;
-    height: 600px;
+    width: 1334px;
+    height: 750px;
   }
-}
+} */
