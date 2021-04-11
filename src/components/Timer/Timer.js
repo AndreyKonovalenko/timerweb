@@ -19,6 +19,7 @@ import 'react-circular-progressbar/dist/styles.css';
 const Timer = () => {
   const [distance, setDistance] = useState(6000);
   const [timerId, setTimerId] = useState(null);
+  const [range, setRange] = useState(0);
 
   const onStartHandler = (distance) => {
     let dist = distance;
@@ -36,6 +37,13 @@ const Timer = () => {
     console.log('stop');
   };
 
+  const onSilderHandler = (event) => {
+    event.preventDefault();
+    console.log(event.target.value);
+    setRange(event.target.value);
+    setDistance(event.target.value * 100);
+  };
+
   useEffect(() => {
     console.log('timerId: ', timerId, 'time left: ', distance);
     if (distance === 0) {
@@ -45,8 +53,18 @@ const Timer = () => {
     }
   }, [distance, timerId]);
   const data = distance / 60;
+
   return (
     <div>
+      <div>
+        <input
+          type='range'
+          min='0'
+          max='60'
+          value={range}
+          onInput={onSilderHandler}
+        />
+      </div>
       <p>{distance}</p>
       <CircularProgressbar
         value={data}
