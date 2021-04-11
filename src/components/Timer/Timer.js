@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import {CircularProgressbar} from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 //   let dist = distance;
 //   return (dispatch) => {
@@ -42,10 +44,15 @@ const Timer = () => {
       setDistance(6000);
     }
   }, [distance, timerId]);
-
+  const data = distance / 60;
   return (
     <div>
       <p>{distance}</p>
+      <CircularProgressbar
+        value={data}
+        text={distance}
+        counterClockwise={true}
+      />
       <button onClick={() => onStartHandler(distance)}>start</button>
       <button onClick={() => onStopHandler(timerId)}>stop</button>
     </div>
