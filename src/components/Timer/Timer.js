@@ -1,30 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import React, {useState, useEffect} from 'react';
+import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 import cssObject from './Timer.module.css';
 
-//   let dist = distance;
-//   return (dispatch) => {
-//     let id = setInterval(() => {
-//       if (dist > 0) {
-//         dist = dist - 100;
-//         // interval controller
-//         intervalController(dist, currentTimer, sounds);
-//         dispatch(setDistance(dist));
-//       }
-//     }, 100);
-//     dispatch(setTimerIdentifyingValue(id));
-//   };
-// };
+//   helper function
+// distance converter:
+export const getLeftTime = (distance) => {
+  const hours = Math.floor(
+    (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+  return {
+    hours: hours < 10 ? `0${hours}` : hours.toString(),
+    minutes: minutes < 10 ? `0${minutes}` : minutes.toString(),
+    seconds: seconds < 10 ? `0${seconds}` : seconds.toString(),
+  };
+};
 
 const Timer = () => {
-  const [distance, setDistance] = useState(0);
+  const [distance, setDistance] = useState(null);
   const [timerId, setTimerId] = useState(null);
   const [hours, setHours] = useState(0);
   const [minutes, setMinuts] = useState(0);
   const [seconds, setSeconds] = useState(0);
+  const [divider, setDivider] = useState(1);
 
   const onStartHandler = (distance) => {
     let dist = distance;
@@ -37,7 +39,7 @@ const Timer = () => {
     setTimerId(id);
   };
 
-  const onStopHandler = (timerID) => {
+  const onStopHandler = (timerId) => {
     clearInterval(timerId);
     console.log('stop');
   };
@@ -58,32 +60,40 @@ const Timer = () => {
     event.preventDefault();
     console.log(event.target.value);
     setSeconds(event.target.value);
-
   };
 
   useEffect(() => {
     console.log('timerId: ', timerId, 'time left: ', distance);
-    // if (distance === 0) {
-    //   console.log('reset Timer');
-    //   clearInterval(timerId);
-    // }
-    setDistance(hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000)
-  }, [distance, timerId, hours, minutes, seconds]);
+    if (distance === 0) {
+      console.log('reset Timer');
+      clearInterval(timerId);
+      setTimerId(null);
+    }
+    if (timerId === null) {
+      setDistance(
+        hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000
+      );
+      setDivider(
+        (hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000) / 100
+      );
+    }
+  }, [distance, timerId, hours, minutes, seconds, setDistance, setDivider]);
 
-  const data = distance / 1000;
-
+  const extractedTime = getLeftTime(distance);
+  const barValue = distance / divider;
+  console.log(barValue);
   return (
     <div>
       <div className={cssObject.SliderContainer}>
         <div>
-        <input
-          type='range'
-          min='0'
-          max='24'
-          value={hours}
-          onInput={onSilderHours}
-          name="hours"
-        />
+          <input
+            type='range'
+            min='0'
+            max='24'
+            value={hours}
+            onInput={onSilderHours}
+            name='hours'
+          />
         </div>
         <div>
           <input
@@ -106,10 +116,9 @@ const Timer = () => {
           />
         </div>
       </div>
-      <p>{distance}</p>
       <CircularProgressbar
-        value={data}
-        text={`${hours}:${minutes}:${seconds}`}
+        value={barValue}
+        text={`${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`}
         counterClockwise={true}
       />
       <button onClick={() => onStartHandler(distance)}>start</button>
