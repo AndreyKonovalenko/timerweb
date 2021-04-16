@@ -1,3 +1,45 @@
 .SliderContainer {
   display: block;
+  width: 50%;
+  padding: 5%;
+  border-radius: 2rem;
+  background-color: var(--beige)
+}
+
+.Slider {
+  -webkit-appearance: none;
+  width: 80%;
+  height: 15px;
+  border-radius: 2em;
+  background: var(--yellow);
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.Slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--orange);
+  cursor: pointer;
+}
+
+.Slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--orange);
+  cursor: pointer;
+}
+
+.SilderElement {
+  display: inline-block
+}
+
+.ProgressBarContainer {
+  margin: 10%;
 }

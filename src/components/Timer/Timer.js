@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {CircularProgressbar} from 'react-circular-progressbar';
+import React, { useState, useEffect } from 'react';
+import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 import cssObject from './Timer.module.css';
@@ -84,46 +84,57 @@ const Timer = () => {
   console.log(barValue);
   return (
     <div>
+
+      <div className={cssObject.ProgressBarContainer}>
+        <CircularProgressbar
+          value={barValue}
+          text={`${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`}
+          counterClockwise={true}
+        />
+      </div>
+        <button onClick = {
+        () => onStartHandler(distance) } > start < /button>
+        <button onClick = {
+        () => onStopHandler(timerId) } > stop < /button>
       <div className={cssObject.SliderContainer}>
-        <div>
+        <div className={cssObject.SliderElement}>
+        <span>h</span>
           <input
-            type='range'
-            min='0'
-            max='24'
-            value={hours}
-            onInput={onSilderHours}
-            name='hours'
-          />
-        </div>
-        <div>
-          <input
-            type='range'
-            min='0'
-            max='60'
-            value={minutes}
-            onInput={onSilderMinutes}
-            name='minutes'
-          />
-        </div>
-        <div>
-          <input
-            type='range'
-            min='0'
-            max='60'
-            value={seconds}
-            onInput={onSilderSeconds}
-            name='seconds'
-          />
+              className={cssObject.Slider}
+              type='range'
+              min='0'
+              max='24'
+              value={hours}
+              onInput={onSilderHours}
+              name='hours'
+            />
+          </div>
+          <div>
+          <span>m</span>
+            <input
+              className={cssObject.Slider}
+              type='range'
+              min='0'
+              max='60'
+              value={minutes}
+              onInput={onSilderMinutes}
+              name='minutes'
+            />
+          </div>
+          <div>
+          <span>s</span>
+            <input
+              className={cssObject.Slider}
+              type='range'
+              min='0'
+              max='60'
+              value={seconds}
+              onInput={onSilderSeconds}
+              name='seconds'
+            />
+          </div>
         </div>
       </div>
-      <CircularProgressbar
-        value={barValue}
-        text={`${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`}
-        counterClockwise={true}
-      />
-      <button onClick={() => onStartHandler(distance)}>start</button>
-      <button onClick={() => onStopHandler(timerId)}>stop</button>
-    </div>
   );
 };
 

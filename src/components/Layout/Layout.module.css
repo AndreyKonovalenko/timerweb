@@ -10,9 +10,10 @@
   text-align: center;
   font-weight: bold;
   font-size: 45;
-  border: 2px solid black;
+  border: 2px solid var(--brown);
   border-radius: 2rem;
   background-color: var(--yellow);
+  color: var(--brown);
 }
 
 /* @media (min-width: 500px) and (min-height: 400px) {
