@@ -1,3 +1,5 @@
+@import './../../constants.css';
+
 .Main {
   width: 325px;
   margin: auto;
@@ -10,6 +12,7 @@
   font-size: 45;
   border: 2px solid black;
   border-radius: 2rem;
+  background-color: var(--yellow);
 }
 
 /* @media (min-width: 500px) and (min-height: 400px) {
