@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import React, {useState, useEffect} from 'react';
+import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 import cssObject from './Timer.module.css';
@@ -84,7 +84,6 @@ const Timer = () => {
   console.log(barValue);
   return (
     <div>
-
       <div className={cssObject.ProgressBarContainer}>
         <CircularProgressbar
           value={barValue}
@@ -92,49 +91,47 @@ const Timer = () => {
           counterClockwise={true}
         />
       </div>
-        <button onClick = {
-        () => onStartHandler(distance) } > start < /button>
-        <button onClick = {
-        () => onStopHandler(timerId) } > stop < /button>
+      <button onClick={() => onStartHandler(distance)}> start </button>
+      <button onClick={() => onStopHandler(timerId)}> stop </button>
       <div className={cssObject.SliderContainer}>
         <div className={cssObject.SliderElement}>
-        <span>h</span>
+          <span>h</span>
           <input
-              className={cssObject.Slider}
-              type='range'
-              min='0'
-              max='24'
-              value={hours}
-              onInput={onSilderHours}
-              name='hours'
-            />
-          </div>
-          <div>
+            className={cssObject.Slider}
+            type='range'
+            min='0'
+            max='24'
+            value={hours}
+            onInput={onSilderHours}
+            name='hours'
+          />
+        </div>
+        <div className={cssObject.SliderElement}>
           <span>m</span>
-            <input
-              className={cssObject.Slider}
-              type='range'
-              min='0'
-              max='60'
-              value={minutes}
-              onInput={onSilderMinutes}
-              name='minutes'
-            />
-          </div>
-          <div>
+          <input
+            className={cssObject.Slider}
+            type='range'
+            min='0'
+            max='60'
+            value={minutes}
+            onInput={onSilderMinutes}
+            name='minutes'
+          />
+        </div>
+        <div className={cssObject.SliderElement}>
           <span>s</span>
-            <input
-              className={cssObject.Slider}
-              type='range'
-              min='0'
-              max='60'
-              value={seconds}
-              onInput={onSilderSeconds}
-              name='seconds'
-            />
-          </div>
+          <input
+            className={cssObject.Slider}
+            type='range'
+            min='0'
+            max='60'
+            value={seconds}
+            onInput={onSilderSeconds}
+            name='seconds'
+          />
         </div>
       </div>
+    </div>
   );
 };
 
