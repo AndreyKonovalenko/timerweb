@@ -89,6 +89,18 @@ const Timer = () => {
           value={barValue}
           text={`${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`}
           counterClockwise={true}
+          styles={{
+            path: {
+              stroke: `rgba(246, 198, 81, ${barValue})`,
+            },
+            trail: {
+              stroke: 'var(--beige)',
+            },
+            text: {
+              fontSize: '16px',
+              fill: 'var(--orange)',
+            },
+          }}
         />
       </div>
       <button onClick={() => onStartHandler(distance)}> start </button>
