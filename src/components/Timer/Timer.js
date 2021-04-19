@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {CircularProgressbar} from 'react-circular-progressbar';
+import React, { useState, useEffect } from 'react';
+import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import Button from '../Button/Button';
 
 import cssObject from './Timer.module.css';
 
@@ -94,17 +95,17 @@ const Timer = () => {
               stroke: `rgba(246, 198, 81, ${barValue})`,
             },
             trail: {
-              stroke: 'var(--beige)',
+              stroke: 'var(--tertiary)',
             },
             text: {
               fontSize: '16px',
-              fill: 'var(--orange)',
+              fill: 'var(--primary)',
             },
           }}
         />
       </div>
-      <button onClick={() => onStartHandler(distance)}> start </button>
-      <button onClick={() => onStopHandler(timerId)}> stop </button>
+      <Button onClickHandler={() => onStartHandler(distance)} name='Start' />
+      <Button onClickHandler={() => onStopHandler(timerId)} name='Stop' />
       <div className={cssObject.SliderContainer}>
         <div className={cssObject.SliderElement}>
           <span>h</span>

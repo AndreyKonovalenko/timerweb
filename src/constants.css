@@ -1,6 +1,6 @@
 :root {
-  --orange: #e38c4c;
-  --yellow: #f6c651;
-  --beige: #fcf1da;
-  --brown: #977b60;
+  --primary: #e38c4c;
+  --secondary: #f6c651;
+  --tetriary: #fcf1da;
+  --quaternary: #977b60;
 }
