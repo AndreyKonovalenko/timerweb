@@ -29,6 +29,11 @@ const Timer = () => {
   const [seconds, setSeconds] = useState(0);
   const [divider, setDivider] = useState(1);
 
+  //Buttons logic
+  const [startClicked, setSartClicked] = useEffect(false);
+  const [resetClicked, setResetButton] = useEffect(false);
+
+
   const onStartHandler = (distance) => {
     let dist = distance;
     let id = setInterval(() => {
