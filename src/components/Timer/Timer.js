@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import React, {useState, useEffect} from 'react';
+import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '../Button/Button';
 
@@ -30,9 +30,10 @@ const Timer = () => {
   const [divider, setDivider] = useState(1);
 
   //Buttons logic
-  const [startClicked, setSartClicked] = useEffect(false);
-  const [resetClicked, setResetButton] = useEffect(false);
-
+  const [startClicked, setSartClicked] = useState(false);
+  const [resetClicked, setResetButton] = useState(false);
+  const [resumeClicked, setResumeCliked] = useState(false);
+  const [pouseClicked, setPouseCliked] = useState(false);
 
   const onStartHandler = (distance) => {
     let dist = distance;
@@ -73,7 +74,6 @@ const Timer = () => {
     if (distance === 0) {
       console.log('reset Timer');
       clearInterval(timerId);
-      setTimerId(null);
     }
     if (timerId === null) {
       setDistance(
@@ -97,20 +97,22 @@ const Timer = () => {
           counterClockwise={true}
           styles={{
             path: {
-              stroke: `rgba(246, 198, 81, ${barValue})`,
+              stroke: `rgba(227, 140, 76, ${barValue})`,
             },
             trail: {
-              stroke: 'var(--tertiary)',
+              stroke: 'var(--secondary)',
             },
             text: {
               fontSize: '16px',
-              fill: 'var(--primary)',
+              fill: 'var(--quaternary)',
             },
           }}
         />
       </div>
-      <Button onClickHandler={() => onStartHandler(distance)} name='Start' />
-      <Button onClickHandler={() => onStopHandler(timerId)} name='Stop' />
+      <div className={cssObject.ButtonContainer}>
+        <Button onClickHandler={() => onStopHandler(timerId)} name='Stop' />
+        <Button onClickHandler={() => onStartHandler(distance)} name='Start' />
+      </div>
       <div className={cssObject.SliderContainer}>
         <div className={cssObject.SliderElement}>
           <span>h</span>

@@ -45,3 +45,8 @@
 .ProgressBarContainer {
   margin: 10%;
 }
+
+.ButtonContainer {
+  display: flex;
+  flex-direction: row;
+}
