@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import React, {useState, useEffect} from 'react';
+import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '../Button/Button';
 
@@ -33,7 +33,7 @@ const Timer = () => {
   const [startIsActive, setStartIsActive] = useState(true);
   const [resetIsActive, setResetIsActive] = useState(false);
   const [resumeIsActive, setResumeIsActive] = useState(false);
-  const [pouseIsActive, setPouseIsActive] = useState(false);
+  const [pauseIsActive, setPauseIsActive] = useState(false);
 
   const onStartHandler = (distance) => {
     let dist = distance;
@@ -44,7 +44,9 @@ const Timer = () => {
       }
     }, 1000);
     setTimerId(id);
-    setResetIsActive(true)
+    setStartIsActive(false);
+    setResetIsActive(true);
+    setPauseIsActive(true);
   };
 
   const onResetHandler = (timeId) => {
@@ -52,11 +54,17 @@ const Timer = () => {
     setDistance(null);
     setResetIsActive(false);
     setStartIsActive(true);
-  }
+  };
 
-  const onStopHandler = (timerId) => {
+  const onPauseHandler = (timerId) => {
     clearInterval(timerId);
-    console.log('stop');
+    setResumeIsActive(true);
+    setPauseIsActive(false);
+  };
+
+  const onResumeHandler = () => {
+    setPauseIsActive(true);
+    onStartHandler(distance);
   };
 
   const onSilderHours = (event) => {
@@ -78,7 +86,7 @@ const Timer = () => {
   };
 
   useEffect(() => {
-    console.log('timerId: ', timerId, 'time left: ', distance);
+    //console.log('timerId: ', timerId, 'time left: ', distance);
     if (distance === 0) {
       console.log('reset Timer');
       clearInterval(timerId);
@@ -95,7 +103,6 @@ const Timer = () => {
 
   const extractedTime = getLeftTime(distance);
   const barValue = distance / divider;
-  console.log(barValue);
   return (
     <div>
       <div className={cssObject.ProgressBarContainer}>
@@ -118,8 +125,23 @@ const Timer = () => {
         />
       </div>
       <div className={cssObject.ButtonContainer}>
-        <Button onClickHandler={() => onResetHandler(timerId)} name='Reset' isActive={resetIsActive}/>
-        <Button onClickHandler={() => onStartHandler(distance)} name='Start' />
+        <Button
+          onClickHandler={() => onResetHandler(timerId)}
+          name='Reset'
+          isActive={resetIsActive}
+        />
+        {startIsActive ? (
+          <Button
+            onClickHandler={() => onStartHandler(distance)}
+            name='Start'
+          />
+        ) : null}
+        {resumeIsActive ? (
+          <Button onClickHandler={() => onResumeHandler()} name='Resume' />
+        ) : null}
+        {pauseIsActive ? (
+          <Button onClickHandler={() => onPauseHandler(timerId)} name='Pause' />
+        ) : null}
       </div>
       <div className={cssObject.SliderContainer}>
         <div className={cssObject.SliderElement}>
