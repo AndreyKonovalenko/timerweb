@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {CircularProgressbar} from 'react-circular-progressbar';
+import React, { useState, useEffect } from 'react';
+import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '../Button/Button';
 
@@ -30,10 +30,10 @@ const Timer = () => {
   const [divider, setDivider] = useState(1);
 
   //Buttons logic
-  const [startClicked, setSartClicked] = useState(false);
-  const [resetClicked, setResetButton] = useState(false);
-  const [resumeClicked, setResumeCliked] = useState(false);
-  const [pouseClicked, setPouseCliked] = useState(false);
+  const [startIsActive, setStartIsActive] = useState(true);
+  const [resetIsActive, setResetIsActive] = useState(false);
+  const [resumeIsActive, setResumeIsActive] = useState(false);
+  const [pouseIsActive, setPouseIsActive] = useState(false);
 
   const onStartHandler = (distance) => {
     let dist = distance;
@@ -44,7 +44,15 @@ const Timer = () => {
       }
     }, 1000);
     setTimerId(id);
+    setResetIsActive(true)
   };
+
+  const onResetHandler = (timeId) => {
+    clearInterval(timeId);
+    setDistance(null);
+    setResetIsActive(false);
+    setStartIsActive(true);
+  }
 
   const onStopHandler = (timerId) => {
     clearInterval(timerId);
@@ -110,7 +118,7 @@ const Timer = () => {
         />
       </div>
       <div className={cssObject.ButtonContainer}>
-        <Button onClickHandler={() => onStopHandler(timerId)} name='Stop' />
+        <Button onClickHandler={() => onResetHandler(timerId)} name='Reset' isActive={resetIsActive}/>
         <Button onClickHandler={() => onStartHandler(distance)} name='Start' />
       </div>
       <div className={cssObject.SliderContainer}>
