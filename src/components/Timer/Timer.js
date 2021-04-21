@@ -51,9 +51,15 @@ const Timer = () => {
 
   const onResetHandler = (timeId) => {
     clearInterval(timeId);
+    setTimerId(null);
     setDistance(null);
     setResetIsActive(false);
     setStartIsActive(true);
+    setPauseIsActive(false);
+    setResumeIsActive(false);
+    setHours(0);
+    setMinuts(0);
+    setSeconds(0);
   };
 
   const onPauseHandler = (timerId) => {
@@ -65,6 +71,7 @@ const Timer = () => {
   const onResumeHandler = () => {
     setPauseIsActive(true);
     onStartHandler(distance);
+    setResumeIsActive(false);
   };
 
   const onSilderHours = (event) => {
@@ -86,11 +93,7 @@ const Timer = () => {
   };
 
   useEffect(() => {
-    //console.log('timerId: ', timerId, 'time left: ', distance);
-    if (distance === 0) {
-      console.log('reset Timer');
-      clearInterval(timerId);
-    }
+    console.log(timerId);
     if (timerId === null) {
       setDistance(
         hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000
