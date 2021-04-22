@@ -102,12 +102,12 @@ const Timer = () => {
 
   useEffect(() => {
     console.log(timerId);
-    if (timerId === null) {
+    if (startIn != null) {
+      setDistance(startIn * 1000);
+    }
+    if (timerId === null && startIn === 0) {
       setDistance(
-        hours * 60 * 60 * 1000 +
-          minutes * 60 * 1000 +
-          seconds * 1000 +
-          startIn * 1000
+        hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000
       );
       setDivider(
         (hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000) / 100
