@@ -27,6 +27,7 @@ const Timer = () => {
   const [hours, setHours] = useState(0);
   const [minutes, setMinuts] = useState(0);
   const [seconds, setSeconds] = useState(0);
+  const [startIn, setStartIn] = useState(0);
   const [divider, setDivider] = useState(1);
 
   //Buttons logic
@@ -36,6 +37,10 @@ const Timer = () => {
   const [pauseIsActive, setPauseIsActive] = useState(false);
 
   const onStartHandler = (distance) => {
+    setStartIsActive(false);
+    setResetIsActive(true);
+    setPauseIsActive(true);
+
     let dist = distance;
     let id = setInterval(() => {
       if (dist > 0) {
@@ -44,9 +49,6 @@ const Timer = () => {
       }
     }, 1000);
     setTimerId(id);
-    setStartIsActive(false);
-    setResetIsActive(true);
-    setPauseIsActive(true);
   };
 
   const onResetHandler = (timeId) => {
@@ -92,20 +94,39 @@ const Timer = () => {
     setSeconds(event.target.value);
   };
 
+  const onSilderStartIn = (event) => {
+    event.preventDefault();
+    console.log(event.target.value);
+    setStartIn(event.target.value);
+  };
+
   useEffect(() => {
     console.log(timerId);
     if (timerId === null) {
       setDistance(
-        hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000
+        hours * 60 * 60 * 1000 +
+          minutes * 60 * 1000 +
+          seconds * 1000 +
+          startIn * 1000
       );
       setDivider(
         (hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000) / 100
       );
     }
-  }, [distance, timerId, hours, minutes, seconds, setDistance, setDivider]);
+  }, [
+    distance,
+    timerId,
+    hours,
+    minutes,
+    seconds,
+    setDistance,
+    setDivider,
+    startIn,
+  ]);
 
   const extractedTime = getLeftTime(distance);
   const barValue = distance / divider;
+
   return (
     <div>
       <div className={cssObject.ProgressBarContainer}>
@@ -127,6 +148,7 @@ const Timer = () => {
           }}
         />
       </div>
+
       <div className={cssObject.ButtonContainer}>
         <Button
           onClickHandler={() => onResetHandler(timerId)}
@@ -181,6 +203,18 @@ const Timer = () => {
             value={seconds}
             onInput={onSilderSeconds}
             name='seconds'
+          />
+        </div>
+        <div className={cssObject.SliderElement}>
+          <span>start in</span>
+          <input
+            className={cssObject.Slider}
+            type='range'
+            min='0'
+            max='60'
+            value={startIn}
+            onInput={onSilderStartIn}
+            name='startIn'
           />
         </div>
       </div>
