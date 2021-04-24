@@ -29,6 +29,8 @@ const Timer = () => {
   const [seconds, setSeconds] = useState(0);
   const [startIn, setStartIn] = useState(0);
   const [divider, setDivider] = useState(1);
+  const [fullDistance, setFullDistance] = useState(null);
+  const [startNow, setStartNow] = useState(false);
 
   //Buttons logic
   const [startIsActive, setStartIsActive] = useState(true);
@@ -36,19 +38,23 @@ const Timer = () => {
   const [resumeIsActive, setResumeIsActive] = useState(false);
   const [pauseIsActive, setPauseIsActive] = useState(false);
 
-  const onStartHandler = (distance) => {
+  const onStartHandler = (fullDistance) => {
     setStartIsActive(false);
     setResetIsActive(true);
     setPauseIsActive(true);
 
-    let dist = distance;
-    let id = setInterval(() => {
+    setTimerId(timer(fullDistance));
+  };
+
+  const timer = (data) => {
+    let dist = data;
+    const timerId = setInterval(() => {
       if (dist > 0) {
         dist = dist - 1000;
-        setDistance(dist);
+        setFullDistance(dist);
       }
     }, 1000);
-    setTimerId(id);
+    return timerId;
   };
 
   const onResetHandler = (timeId) => {
@@ -78,40 +84,47 @@ const Timer = () => {
 
   const onSilderHours = (event) => {
     event.preventDefault();
-    console.log(event.target.value);
+
     setHours(event.target.value);
   };
 
   const onSilderMinutes = (event) => {
     event.preventDefault();
-    console.log(event.target.value);
     setMinuts(event.target.value);
   };
 
   const onSilderSeconds = (event) => {
     event.preventDefault();
-    console.log(event.target.value);
     setSeconds(event.target.value);
   };
 
   const onSilderStartIn = (event) => {
     event.preventDefault();
-    console.log(event.target.value);
     setStartIn(event.target.value);
   };
 
   useEffect(() => {
     console.log(timerId);
-    if (startIn != null) {
-      setDistance(startIn * 1000);
-    }
-    if (timerId === null && startIn === 0) {
+    console.log(fullDistance, distance);
+    // if (startIn != null) {
+    //   setDistance(startIn * 1000);
+    // }
+    if (timerId === null) {
+      setFullDistance(
+        hours * 60 * 60 * 1000 +
+          minutes * 60 * 1000 +
+          seconds * 1000 +
+          startIn * 1000
+      );
       setDistance(
         hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000
       );
       setDivider(
         (hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000) / 100
       );
+    }
+    if (fullDistance === distance) {
+      setStartNow(true);
     }
   }, [
     distance,
@@ -122,17 +135,22 @@ const Timer = () => {
     setDistance,
     setDivider,
     startIn,
+    setFullDistance,
+    fullDistance,
   ]);
-
+  const extractetStartTime = getLeftTime(fullDistance - distance);
   const extractedTime = getLeftTime(distance);
   const barValue = distance / divider;
-
+  const text = startNow
+    ? `${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`
+    : extractetStartTime.seconds;
+  console.log(text);
   return (
     <div>
       <div className={cssObject.ProgressBarContainer}>
         <CircularProgressbar
-          value={barValue}
-          text={`${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`}
+          value={startNow ? barValue : null}
+          text={text}
           counterClockwise={true}
           styles={{
             path: {
@@ -157,7 +175,7 @@ const Timer = () => {
         />
         {startIsActive ? (
           <Button
-            onClickHandler={() => onStartHandler(distance)}
+            onClickHandler={() => onStartHandler(fullDistance)}
             name='Start'
           />
         ) : null}
@@ -205,6 +223,7 @@ const Timer = () => {
             name='seconds'
           />
         </div>
+        <span>{startIn}</span>
         <div className={cssObject.SliderElement}>
           <span>start in</span>
           <input
