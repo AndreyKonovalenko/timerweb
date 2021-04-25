@@ -26,17 +26,20 @@ const SET_HOURS = 'SET_HOURS';
 const SET_MINUTES = 'SET_MINUTES';
 const SET_SECONDS = 'SET_SECONDS';
 const SET_STARTIN = 'SET_STARTIN';
+const SET_DISTANCE = 'SET_DISTANCE';
 // TIMER ACTION CREATOR
 const setHours = (hours) => ({type: SET_HOURS, payload: hours});
 const setMinutes = (minutes) => ({type: SET_MINUTES, payload: minutes});
 const setSeconds = (seconds) => ({type: SET_SECONDS, payload: seconds});
 const setStartIn = (startIn) => ({teyp: SET_STARTIN, payload: startIn});
+const setDistance = (distance) => ({type: SET_DISTANCE, payload: distance});
 
 const initialState = {
   hours: 0,
   minutes: 0,
   seconds: 0,
   startIn: 0,
+  distance: 0,
 };
 
 // TIMER TIME REDUCER
@@ -73,8 +76,8 @@ const Timer = () => {
   const [timerId, setTimerId] = useState(null);
 
   const [divider, setDivider] = useState(1);
-  const [fullDistance, setFullDistance] = useState(null);
-  const [startNow, setStartNow] = useState(false);
+  // const [fullDistance, setFullDistance] = useState(null);
+  // const [startNow, setStartNow] = useState(false);
 
   //Buttons logic
   const [startIsActive, setStartIsActive] = useState(true);
@@ -86,7 +89,6 @@ const Timer = () => {
     setStartIsActive(false);
     setResetIsActive(true);
     setPauseIsActive(true);
-
     setTimerId(timer(fullDistance));
   };
 
@@ -95,7 +97,7 @@ const Timer = () => {
     const timerId = setInterval(() => {
       if (dist > 0) {
         dist = dist - 1000;
-        setFullDistance(dist);
+        dispatch(setDistance(dist));
       }
     }, 1000);
     return timerId;
@@ -145,55 +147,55 @@ const Timer = () => {
 
   useEffect(() => {
     console.log(timerId);
-    console.log(fullDistance, distance);
     console.log('state is:', state);
+
+    if (timerId === null) {
+      dispatch(
+        setDistance(
+          state.hours * 60 * 60 * 1000 +
+            state.minutes * 60 * 1000 +
+            state.seconds * 1000 +
+            state.startIn * 1000
+        )
+      );
+    }
+
     // if (startIn != null) {
     //   setDistance(startIn * 1000);
     // }
-    if (timerId === null) {
-      setFullDistance(
-        state.hours * 60 * 60 * 1000 +
-          state.minutes * 60 * 1000 +
-          state.seconds * 1000 +
-          state.startIn * 1000
-      );
-      setDistance(
-        state.hours * 60 * 60 * 1000 +
-          state.minutes * 60 * 1000 +
-          state.seconds * 1000
-      );
-      setDivider(
-        (state.hours * 60 * 60 * 1000 +
-          state.minutes * 60 * 1000 +
-          state.seconds * 1000) /
-          100
-      );
-    }
-    if (fullDistance === distance) {
-      setStartNow(true);
-    }
-  }, [
-    distance,
-    timerId,
-    state,
-    setDistance,
-    setDivider,
-    setFullDistance,
-    fullDistance,
-  ]);
-  const extractetStartTime = getLeftTime(fullDistance - distance);
+    // if (timerId === null) {
+    //   setFullDistance(
+    //     state.hours * 60 * 60 * 1000 +
+    //       state.minutes * 60 * 1000 +
+    //       state.seconds * 1000 +
+    //       state.startIn * 1000
+    //   );
+    //   setDistance(
+    //     state.hours * 60 * 60 * 1000 +
+    //       state.minutes * 60 * 1000 +
+    //       state.seconds * 1000
+    //   );
+    //   setDivider(
+    //     (state.hours * 60 * 60 * 1000 +
+    //       state.minutes * 60 * 1000 +
+    //       state.seconds * 1000) /
+    //       100
+    //   );
+    // }
+    // if (fullDistance === distance) {
+    //   setStartNow(true);
+    // }
+  }, []);
+
   const extractedTime = getLeftTime(distance);
   const barValue = distance / divider;
-  const text = startNow
-    ? `${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`
-    : extractetStartTime.seconds;
-  console.log(text);
+
   return (
     <div>
       <div className={cssObject.ProgressBarContainer}>
         <CircularProgressbar
-          value={startNow ? barValue : null}
-          text={text}
+          value={barValue}
+          text={`${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`}
           counterClockwise={true}
           styles={{
             path: {
