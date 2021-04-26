@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useReducer } from 'react';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import React, {useState, useEffect, useReducer} from 'react';
+import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '../Button/Button';
 
@@ -28,18 +28,18 @@ const SET_SECONDS = 'SET_SECONDS';
 const SET_STARTIN = 'SET_STARTIN';
 const SET_DISTANCE = 'SET_DISTANCE';
 // TIMER ACTION CREATOR
-const setHours = (hours) => ({ type: SET_HOURS, payload: hours });
-const setMinutes = (minutes) => ({ type: SET_MINUTES, payload: minutes });
-const setSeconds = (seconds) => ({ type: SET_SECONDS, payload: seconds });
-const setStartIn = (startIn) => ({ teyp: SET_STARTIN, payload: startIn });
-const setDistance = (distance) => ({ type: SET_DISTANCE, payload: distance });
+const setHours = (hours) => ({type: SET_HOURS, payload: hours});
+const setMinutes = (minutes) => ({type: SET_MINUTES, payload: minutes});
+const setSeconds = (seconds) => ({type: SET_SECONDS, payload: seconds});
+const setStartIn = (startIn) => ({type: SET_STARTIN, payload: startIn});
+const setDistance = (distance) => ({type: SET_DISTANCE, payload: distance});
 
 const initialState = {
   hours: 0,
   minutes: 0,
   seconds: 0,
   startIn: 0,
-  distance: null,
+  distance: 0,
 };
 
 // TIMER TIME REDUCER
@@ -68,8 +68,8 @@ const reducer = (state, action) => {
     case SET_DISTANCE:
       return {
         ...state,
-        setDistance: action.ayload
-      }
+        setDistance: action.ayload,
+      };
     default:
       return state;
   }
@@ -78,6 +78,8 @@ const reducer = (state, action) => {
 const Timer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [timerId, setTimerId] = useState(null);
+  //let make distance local
+  const [distance, setDistance] = useState(0);
 
   const [divider, setDivider] = useState(1);
   // const [fullDistance, setFullDistance] = useState(null);
@@ -89,11 +91,11 @@ const Timer = () => {
   const [resumeIsActive, setResumeIsActive] = useState(false);
   const [pauseIsActive, setPauseIsActive] = useState(false);
 
-  const onStartHandler = (distance) => {
+  const onStartHandler = (data) => {
     setStartIsActive(false);
     setResetIsActive(true);
     setPauseIsActive(true);
-    setTimerId(timer(distance));
+    setTimerId(timer(data));
   };
 
   const timer = (data) => {
@@ -110,7 +112,6 @@ const Timer = () => {
   const onResetHandler = (timeId) => {
     clearInterval(timeId);
     setTimerId(null);
-    dispatch(setDistance(null));
     setResetIsActive(false);
     setStartIsActive(true);
     setPauseIsActive(false);
@@ -154,31 +155,24 @@ const Timer = () => {
     console.log('state is:', state);
 
     if (timerId === null) {
-      dispatch(
-        setDistance(
-          state.hours * 60 * 60 * 1000 +
-          state.minutes * 60 * 1000 +
-          state.seconds * 1000 +
-          state.startIn * 1000
-        )
-      );
-
-      setDivider(
-        (state.hours * 60 * 60 * 1000 +
-          state.minutes * 60 * 1000 +
-          state.seconds * 1000 + state.startIn * 1000) /
-        100
-      );
+      const time =
+        state.hours * 60 * 60 * 1000 +
+        state.minutes * 60 * 1000 +
+        state.seconds * 1000 +
+        state.startIn * 1000;
+      dispatch(setDistance(time));
     }
-
+    //   setDivider(time / 100);
+    // }
   }, [state, timerId]);
 
   const extractedTime = getLeftTime(state.distance);
-  const barValue = state.distance / divider;
-
+  // const barValue = state.distance / divider;
+  const barValue = 10;
   return (
     <div>
-      <div className={cssObject.ProgressBarContainer}>
+      {state.distance}
+      {/* <div className={cssObject.ProgressBarContainer}>
         <CircularProgressbar
           value={barValue}
           text={`${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`}
@@ -196,7 +190,7 @@ const Timer = () => {
             },
           }}
         />
-      </div>
+      </div> */}
 
       <div className={cssObject.ButtonContainer}>
         <Button
