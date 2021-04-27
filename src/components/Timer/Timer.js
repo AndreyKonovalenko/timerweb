@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useReducer} from 'react';
-import {CircularProgressbar} from 'react-circular-progressbar';
+import React, { useState, useEffect, useReducer, useCallback } from 'react';
+import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '../Button/Button';
 
@@ -7,7 +7,7 @@ import cssObject from './Timer.module.css';
 
 //   helper function
 // distance converter:
-export const getLeftTime = (distance) => {
+const getLeftTime = (distance) => {
   const hours = Math.floor(
     (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
   );
@@ -21,6 +21,10 @@ export const getLeftTime = (distance) => {
   };
 };
 
+const calculateFullDistance = (data) => {
+  return data.hours * 60 * 60 * 1000 + data.minutes * 60 * 1000 + data.seconds * 1000 + data.startIn * 1000;
+};
+
 // TIMER TIME ACTION
 const SET_HOURS = 'SET_HOURS';
 const SET_MINUTES = 'SET_MINUTES';
@@ -28,18 +32,18 @@ const SET_SECONDS = 'SET_SECONDS';
 const SET_STARTIN = 'SET_STARTIN';
 const SET_DISTANCE = 'SET_DISTANCE';
 // TIMER ACTION CREATOR
-const setHours = (hours) => ({type: SET_HOURS, payload: hours});
-const setMinutes = (minutes) => ({type: SET_MINUTES, payload: minutes});
-const setSeconds = (seconds) => ({type: SET_SECONDS, payload: seconds});
-const setStartIn = (startIn) => ({type: SET_STARTIN, payload: startIn});
-const setDistance = (distance) => ({type: SET_DISTANCE, payload: distance});
+const setHours = (hours) => ({ type: SET_HOURS, payload: hours });
+const setMinutes = (minutes) => ({ type: SET_MINUTES, payload: minutes });
+const setSeconds = (seconds) => ({ type: SET_SECONDS, payload: seconds });
+const setStartIn = (startIn) => ({ type: SET_STARTIN, payload: startIn });
+//const setDistance = (distance) => ({ type: SET_DISTANCE, payload: distance });
 
 const initialState = {
   hours: 0,
   minutes: 0,
   seconds: 0,
   startIn: 0,
-  distance: 0,
+  //  distance: 0,
 };
 
 // TIMER TIME REDUCER
@@ -65,11 +69,11 @@ const reducer = (state, action) => {
         ...state,
         startIn: action.payload,
       };
-    case SET_DISTANCE:
-      return {
-        ...state,
-        setDistance: action.ayload,
-      };
+      // case SET_DISTANCE:
+      //   return {
+      //     ...state,
+      //     distance: action.payload,
+      //   };
     default:
       return state;
   }
@@ -103,7 +107,7 @@ const Timer = () => {
     const timerId = setInterval(() => {
       if (dist > 0) {
         dist = dist - 1000;
-        dispatch(setDistance(dist));
+        setDistance(dist);
       }
     }, 1000);
     return timerId;
@@ -150,28 +154,24 @@ const Timer = () => {
     dispatch(setStartIn(event.target.value));
   };
 
+  //  const time = state.hours * 60 * 60 * 1000 + state.minutes * 60 * 1000 + state.seconds * 1000 + state.startIn * 1000;
+
   useEffect(() => {
     console.log(timerId);
     console.log('state is:', state);
 
-    if (timerId === null) {
-      const time =
-        state.hours * 60 * 60 * 1000 +
-        state.minutes * 60 * 1000 +
-        state.seconds * 1000 +
-        state.startIn * 1000;
-      dispatch(setDistance(time));
-    }
+    console.log(calculateFullDistance(state))
     //   setDivider(time / 100);
-    // }
+    if (timerId === null) {
+      setDistance(calculateFullDistance(state));
+    }
   }, [state, timerId]);
-
   const extractedTime = getLeftTime(state.distance);
   // const barValue = state.distance / divider;
   const barValue = 10;
   return (
     <div>
-      {state.distance}
+      {distance}
       {/* <div className={cssObject.ProgressBarContainer}>
         <CircularProgressbar
           value={barValue}
@@ -200,7 +200,7 @@ const Timer = () => {
         />
         {startIsActive ? (
           <Button
-            onClickHandler={() => onStartHandler(state.distance)}
+            onClickHandler={() => onStartHandler(distance)}
             name='Start'
           />
         ) : null}
