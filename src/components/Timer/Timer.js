@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useReducer, useCallback } from 'react';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import React, {useState, useEffect, useReducer} from 'react';
+import {CircularProgressbar} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '../Button/Button';
 
@@ -22,27 +22,28 @@ const getLeftTime = (distance) => {
 };
 
 const calculateFullDistance = (data) => {
-  return data.hours * 60 * 60 * 1000 + data.minutes * 60 * 1000 + data.seconds * 1000 + data.startIn * 1000;
+  return (
+    data.hours * 60 * 60 * 1000 + data.minutes * 60 * 1000 + data.seconds * 1000
+  );
 };
 
 // TIMER TIME ACTION
 const SET_HOURS = 'SET_HOURS';
 const SET_MINUTES = 'SET_MINUTES';
 const SET_SECONDS = 'SET_SECONDS';
-const SET_STARTIN = 'SET_STARTIN';
-const SET_DISTANCE = 'SET_DISTANCE';
+//const SET_DISTANCE = 'SET_DISTANCE';
 // TIMER ACTION CREATOR
-const setHours = (hours) => ({ type: SET_HOURS, payload: hours });
-const setMinutes = (minutes) => ({ type: SET_MINUTES, payload: minutes });
-const setSeconds = (seconds) => ({ type: SET_SECONDS, payload: seconds });
-const setStartIn = (startIn) => ({ type: SET_STARTIN, payload: startIn });
+const setHours = (hours) => ({type: SET_HOURS, payload: hours});
+const setMinutes = (minutes) => ({type: SET_MINUTES, payload: minutes});
+const setSeconds = (seconds) => ({type: SET_SECONDS, payload: seconds});
+//const setStartIn = (startIn) => ({type: SET_STARTIN, payload: startIn});
 //const setDistance = (distance) => ({ type: SET_DISTANCE, payload: distance });
 
 const initialState = {
   hours: 0,
   minutes: 0,
   seconds: 0,
-  startIn: 0,
+  // startIn: 0,
   //  distance: 0,
 };
 
@@ -64,16 +65,16 @@ const reducer = (state, action) => {
         ...state,
         seconds: action.payload,
       };
-    case SET_STARTIN:
-      return {
-        ...state,
-        startIn: action.payload,
-      };
-      // case SET_DISTANCE:
-      //   return {
-      //     ...state,
-      //     distance: action.payload,
-      //   };
+    // case SET_STARTIN:
+    //   return {
+    //     ...state,
+    //     startIn: action.payload,
+    //   };
+    // case SET_DISTANCE:
+    //   return {
+    //     ...state,
+    //     distance: action.payload,
+    //   };
     default:
       return state;
   }
@@ -84,6 +85,7 @@ const Timer = () => {
   const [timerId, setTimerId] = useState(null);
   //let make distance local
   const [distance, setDistance] = useState(0);
+  const [startIn, setStartIn] = useState(0);
 
   const [divider, setDivider] = useState(1);
   // const [fullDistance, setFullDistance] = useState(null);
@@ -95,19 +97,23 @@ const Timer = () => {
   const [resumeIsActive, setResumeIsActive] = useState(false);
   const [pauseIsActive, setPauseIsActive] = useState(false);
 
-  const onStartHandler = (data) => {
+  const onStartHandler = (data, start) => {
     setStartIsActive(false);
     setResetIsActive(true);
     setPauseIsActive(true);
-    setTimerId(timer(data));
+    setTimerId(timer(data, start));
   };
 
-  const timer = (data) => {
-    let dist = data;
+  const timer = (data, start) => {
     const timerId = setInterval(() => {
-      if (dist > 0) {
-        dist = dist - 1000;
-        setDistance(dist);
+      if (start > 0) {
+        start = start - 1;
+        setStartIn(start);
+      } else {
+        if (data > 0) {
+          data = data - 1000;
+          setDistance(data);
+        }
       }
     }, 1000);
     return timerId;
@@ -151,28 +157,28 @@ const Timer = () => {
 
   const onSilderStartIn = (event) => {
     event.preventDefault();
-    dispatch(setStartIn(event.target.value));
+    setStartIn(event.target.value);
   };
-
-  //  const time = state.hours * 60 * 60 * 1000 + state.minutes * 60 * 1000 + state.seconds * 1000 + state.startIn * 1000;
 
   useEffect(() => {
     console.log(timerId);
     console.log('state is:', state);
+    console.log('startIn', startIn);
 
-    console.log(calculateFullDistance(state))
-    //   setDivider(time / 100);
+    console.log(calculateFullDistance(state));
+
     if (timerId === null) {
       setDistance(calculateFullDistance(state));
+      setDivider(calculateFullDistance(state) / 100);
     }
-  }, [state, timerId]);
-  const extractedTime = getLeftTime(state.distance);
-  // const barValue = state.distance / divider;
-  const barValue = 10;
+  }, [state, timerId, startIn]);
+  const extractedTime = getLeftTime(distance);
+  const barValue = distance / divider;
+  //const barValue = 10;
   return (
     <div>
       {distance}
-      {/* <div className={cssObject.ProgressBarContainer}>
+      <div className={cssObject.ProgressBarContainer}>
         <CircularProgressbar
           value={barValue}
           text={`${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`}
@@ -190,7 +196,7 @@ const Timer = () => {
             },
           }}
         />
-      </div> */}
+      </div>
 
       <div className={cssObject.ButtonContainer}>
         <Button
@@ -200,7 +206,7 @@ const Timer = () => {
         />
         {startIsActive ? (
           <Button
-            onClickHandler={() => onStartHandler(distance)}
+            onClickHandler={() => onStartHandler(distance, startIn)}
             name='Start'
           />
         ) : null}
@@ -248,7 +254,7 @@ const Timer = () => {
             name='seconds'
           />
         </div>
-        <span>{state.startIn}</span>
+        <span>{startIn}</span>
         <div className={cssObject.SliderElement}>
           <span>start in</span>
           <input
@@ -256,7 +262,7 @@ const Timer = () => {
             type='range'
             min='0'
             max='60'
-            value={state.startIn}
+            value={startIn}
             onInput={onSilderStartIn}
             name='startIn'
           />
