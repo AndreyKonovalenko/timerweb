@@ -1,5 +1,10 @@
-import React, {useState, useEffect, useReducer} from 'react';
-import {CircularProgressbar} from 'react-circular-progressbar';
+import React, { useState, useEffect, useReducer } from 'react';
+import {
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+  buildStyles
+}
+from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '../Button/Button';
 
@@ -33,9 +38,9 @@ const SET_MINUTES = 'SET_MINUTES';
 const SET_SECONDS = 'SET_SECONDS';
 //const SET_DISTANCE = 'SET_DISTANCE';
 // TIMER ACTION CREATOR
-const setHours = (hours) => ({type: SET_HOURS, payload: hours});
-const setMinutes = (minutes) => ({type: SET_MINUTES, payload: minutes});
-const setSeconds = (seconds) => ({type: SET_SECONDS, payload: seconds});
+const setHours = (hours) => ({ type: SET_HOURS, payload: hours });
+const setMinutes = (minutes) => ({ type: SET_MINUTES, payload: minutes });
+const setSeconds = (seconds) => ({ type: SET_SECONDS, payload: seconds });
 //const setStartIn = (startIn) => ({type: SET_STARTIN, payload: startIn});
 //const setDistance = (distance) => ({ type: SET_DISTANCE, payload: distance });
 
@@ -65,16 +70,16 @@ const reducer = (state, action) => {
         ...state,
         seconds: action.payload,
       };
-    // case SET_STARTIN:
-    //   return {
-    //     ...state,
-    //     startIn: action.payload,
-    //   };
-    // case SET_DISTANCE:
-    //   return {
-    //     ...state,
-    //     distance: action.payload,
-    //   };
+      // case SET_STARTIN:
+      //   return {
+      //     ...state,
+      //     startIn: action.payload,
+      //   };
+      // case SET_DISTANCE:
+      //   return {
+      //     ...state,
+      //     distance: action.payload,
+      //   };
     default:
       return state;
   }
@@ -90,6 +95,7 @@ const Timer = () => {
   const [divider, setDivider] = useState(1);
   // const [fullDistance, setFullDistance] = useState(null);
   // const [startNow, setStartNow] = useState(false);
+  const [childDivider, setChildDivider] = useState(1);
 
   //Buttons logic
   const [startIsActive, setStartIsActive] = useState(true);
@@ -109,7 +115,8 @@ const Timer = () => {
       if (start > 0) {
         start = start - 1;
         setStartIn(start);
-      } else {
+      }
+      else {
         if (data > 0) {
           data = data - 1000;
           setDistance(data);
@@ -170,16 +177,18 @@ const Timer = () => {
     if (timerId === null) {
       setDistance(calculateFullDistance(state));
       setDivider(calculateFullDistance(state) / 100);
+      setChildDivider(startIn / 100);
     }
   }, [state, timerId, startIn]);
   const extractedTime = getLeftTime(distance);
   const barValue = distance / divider;
+  const childBarValue = startIn / childDivider;
   //const barValue = 10;
   return (
     <div>
       {distance}
       <div className={cssObject.ProgressBarContainer}>
-        <CircularProgressbar
+        <CircularProgressbarWithChildren
           value={barValue}
           text={`${extractedTime.hours}:${extractedTime.minutes}:${extractedTime.seconds}`}
           counterClockwise={true}
@@ -195,7 +204,19 @@ const Timer = () => {
               fill: 'var(--quaternary)',
             },
           }}
-        />
+        >
+        <div style={{ width: "84%" }}>
+          <CircularProgressbar
+            value={childBarValue}
+            counterClockwise={true}
+            text={startIn}
+            styles={buildStyles({
+              trailColor: "transparent"
+            })}
+          />
+        </div>
+        </CircularProgressbarWithChildren>
+
       </div>
 
       <div className={cssObject.ButtonContainer}>
